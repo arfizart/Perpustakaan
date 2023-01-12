@@ -1,0 +1,40 @@
+<?php
+$namafolder = "gambar_anggota/"; //tempat menyimpan file
+
+include "../conn.php";
+
+	$id = $_POST['id'];
+	$no_induk = $_POST['no_induk'];
+	$nama = $_POST['nama'];
+	$username = $_POST['username'];
+	$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+	$jk = $_POST['jk'];
+	$kelas = $_POST['kelas'];
+	$ttl = $_POST['ttl'];
+	$alamat = $_POST['alamat'];
+
+if (!empty($_FILES["nama_file"]["tmp_name"])) {
+	$jenis_gambar = $_FILES['nama_file']['type'];
+	
+
+	if ($jenis_gambar == "image/jpeg" || $jenis_gambar == "image/jpg" || $jenis_gambar == "image/gif" || $jenis_gambar == "image/png") {
+		$gambar = $namafolder . basename($_FILES['nama_file']['name']);
+		if (move_uploaded_file($_FILES['nama_file']['tmp_name'], $gambar)) {
+			$sql = "INSERT INTO data_anggota(id,no_induk,nama,username,password,jk,kelas,ttl,alamat,foto) VALUES
+            (NULL,'$no_induk','$nama','$username','$password','$jk','$kelas','$ttl','$alamat','$gambar')";
+			$res = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+			echo "Gambar berhasil dikirim ke direktori" . $gambar;
+			echo "<h3><a href='input-anggota.php'> Input Lagi</a></h3>";
+			echo "<h3><a href='anggota.php'> Data Anggota</a></h3>";
+		} else {
+			echo "<p>Gambar gagal dikirim</p>";
+		}
+	} else {
+		echo "Jenis gambar yang anda kirim salah.";
+	}
+} else {
+	$sql = "INSERT INTO data_anggota(id,no_induk,nama,username,password,jk,kelas,ttl,alamat,foto) VALUES
+            (NULL,'$no_induk','$nama','$username','$password','$jk','$kelas','$ttl','$alamat','gambar_anggota/avatar.jpg')";
+			$res = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+	header("location:input-anggota.php");
+}
