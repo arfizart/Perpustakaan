@@ -15,7 +15,6 @@ if (empty($_SESSION['username'])) {
     <body class="skin-black">
         <!-- header logo: style can be found in header.less -->
         <?php include 'header.php'; ?>
-
     <?php } ?>
     <div class="wrapper row-offcanvas row-offcanvas-left">
         <!-- Left side column. contains the logo and sidebar -->
@@ -59,106 +58,69 @@ if (empty($_SESSION['username'])) {
                     <div class="col-xs-12">
                         <div class="panel">
                             <header class="panel-heading">
-                                <b>Input Buku Perpustakaan</b>
+                                <b>Detail Buku</b>
 
                             </header>
                             <!-- <div class="box-header"> -->
                             <!-- <h3 class="box-title">Responsive Hover Table</h3> -->
-
+                            <?php
+                            $query = mysqli_query($conn, "SELECT * FROM data_buku_perpus WHERE id='$_GET[kd]'");
+                            $data  = mysqli_fetch_array($query);
+                            ?>
                             <!-- </div> -->
-        <?php
-            $q = mysqli_query($conn,"SELECT max(id) as kode FROM data_buku_perpus");
-            $last_id = mysqli_fetch_array($q);
-            $last_id = $last_id['kode'];
-            $urutan = (int) substr($last_id, 2, 4);
-            $urutan++;
-            $huruf = "BK";
-            $kdBuku = $huruf . sprintf("%04s", $urutan);
-        ?>
-        <div class="panel-body">
-            <form class="form-horizontal style-form" style="margin-top: 20px;" action="insert-buku-perpus.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Kode Buku</label>
-                    <div class="col-sm-8">
-                        <input name="id" type="text" id="id" value="<?=$kdBuku;?>" class="form-control" placeholder="Tidak perlu di isi" autofocus="on" readonly="readonly" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Judul</label>
-                    <div class="col-sm-8">
-                        <input name="judul" type="text" id="judul" class="form-control" autocomplete="off" placeholder="Judul Buku" required="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Pengarang</label>
-                    <div class="col-sm-8">
-                        <input name="pengarang" type="text" id="pengarang" class="form-control" autocomplete="off" placeholder="Pengarang" required="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Tahun Terbit</label>
-                    <div class="col-sm-8">
-                        <input name="th_terbit" type="number" min="1900" max="<?=date('Y');?>" id="th_terbit" class="form-control" autocomplete="off" placeholder="Tahun Terbit" required="" value='1999' />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Penerbit</label>
-                    <div class="col-sm-8">
-                        <input name="penerbit" type="text" id="penerbit" class="form-control" autocomplete="off" placeholder="Penerbit" required="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">ISBN</label>
-                    <div class="col-sm-8">
-                        <input name="isbn" type="number" id="isbn" class="form-control" autocomplete="off" placeholder="ISBN" required="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Keterangan</label>
-                    <div class="col-sm-8">
-                        <textarea name="keterangan" type="text" id="keterangan" class="form-control" placeholder="Keterangan"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Kategori</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" name="kategori" id="kategori">
-                            <option value="Umum" selected> Umum</option>
-                            <option value="Kisah"> Kisah</option>
-                            <option value="Novel"> Novel</option>
-                            <option value="Puisi"> Puisi</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Jumlah Halaman</label>
-                    <div class="col-sm-8">
-                        <input name="jumlah_buku" type="number" id="jumlah_buku" class="form-control" autocomplete="off" placeholder="Jumlah Halaman" required value="1" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Tanggal Input</label>
-                    <div class="col-sm-8">
-                        <input name="tgl_input" type="text" id="tgl_input" class="form-control" autocomplete="off" value="<?php echo "" . date("Y/m/d") . ""; ?>" readonly="readonly" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Foto</label>
-                    <div class="col-sm-8">
-                        <input name="nama_file" id="nama_file" type="file" />
-                    </div>
-                </div>
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label class="col-sm-2 col-sm-2 control-label"></label>
-                    <div class="col-sm-8">
-                        <input type="submit" value="Simpan" class="btn btn-sm btn-primary" />&nbsp;
-                        <a href="buku-perpus.php" class="btn btn-sm btn-danger">Batal </a>
-                    </div>
-                </div>
-                <div style="margin-top: 20px;"></div>
-            </form>
-        </div>
-    </div><!-- /.box -->
+                            <div class="panel-body">
+                                <table id="example" class="table table-hover table-bordered">
+                                    <tr>
+                                        <td>ID</td>
+                                        <td><?php echo $data['id']; ?></td>
+                                        <td rowspan="9">
+                                            <div class="pull-right image">
+                                                <img src="<?php if($data['sampul']==''){ echo 'gambar_admin/avatar.jpg';}; ?>" class="img-rounded" height="300" width="250" alt="User Image" style="border: 3px solid #333333;" />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td width="250">Judul</td>
+                                        <td width="550"><?php echo $data['judul']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Pengarang</td>
+                                        <td><?php echo $data['pengarang']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tahun Terbit</td>
+                                        <td><?php echo $data['tahun_terbit']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Penerbit</td>
+                                        <td><?php echo $data['penerbit']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>ISBN</td>
+                                        <td><?php echo $data['isbn']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kategori</td>
+                                        <td><?php echo $data['kategori']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Jumlah Halaman</td>
+                                        <td><?php echo $data['jumlah_buku']; ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tanggal Masuk</td>
+                                        <td colspan="2"><?php echo $data['tanggal_masuk']; ?></td>
+                                    </tr>
+                                </table>
+
+                                <div class="text-right">
+                                    
+                                    <a href="buku-perpus.php" class="btn btn-sm btn-warning"> Kembali <i class="fa fa-arrow-circle-right"></i></a>
+                                </div>
+
+
+                            </div>
+                        </div><!-- /.box -->
                     </div>
                 </div>
                 <!-- row end -->

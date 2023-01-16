@@ -59,7 +59,7 @@ if (empty($_SESSION['username'])) {
                     <div class="col-xs-12">
                         <div class="panel">
                             <header class="panel-heading">
-                                <b>Data Anggota</b>
+                                <b>Data Pinjaman Buku</b>
 
                             </header>
                             <!-- <div class="box-header"> -->
@@ -68,88 +68,125 @@ if (empty($_SESSION['username'])) {
                             <!-- </div> -->
                             <div class="panel-body table-responsive">
                                 <div class="box-tools m-b-15">
-                                    <form action="anggota.php" method="POST">
-                                        <div class="input-group">
-                                            <input type='text' class="form-control input-sm pull-right" style="width: 150px;" name='qcari' placeholder='Cari berdasarkan User ID dan Username' required />
-                                            <div class="input-group-btn">
-                                                <button class="btn btn-sm btn-default" type="submit"><i class="fa fa-search"></i></button>
-                                            </div>
-                                        </div>
-                                    </form>
+                                    
                                 </div>
                                 <?php
-                                $query1 = "select * from data_anggota";
                                 
-                                if (isset($_POST['qcari'])) {
-                                    $qcari = $_POST['qcari'];
-                                    $query1 = "SELECT * FROM  data_anggota 
-	               where no_induk like '%$qcari%'
-	               or nama like '%$qcari%'  ";
-                                }
+
+                                $query1 = "select * from data_peminjam order by id DESC";
+
+                                
                                 $tampil = mysqli_query($conn, $query1) or die(mysqli_error($conn));
                                 ?>
                                 <table id="example" class="table table-hover table-bordered">
                                     <thead>
                                         <tr>
                                             <th>
+                                                <center>ID </center>
+                                            </th>
+                                            <th>
                                                 <center>ID Anggota </center>
                                             </th>
                                             <th>
-                                                <center>Email </center>
+                                                <center>ID Buku </center>
                                             </th>
                                             <th>
-                                                <center>Nama </center>
+                                                <center>Tgl Pinjam </center>
                                             </th>
                                             <th>
-                                                <center>Username </center>
+                                                <center>Batas Pengembalian </center>
                                             </th>
                                             <th>
-                                                <center>Usia </center>
+                                                <center>Tgl Kembali </center>
                                             </th>
                                             <th>
-                                                <center>Tempat, Tanggal Lahir </center>
+                                                <center>Denda </center>
                                             </th>
                                             <th>
-                                                <center>Alamat </center>
+                                                <center>Status </center>
                                             </th>
                                             <th>
                                                 <center>Tools</center>
                                             </th>
                                         </tr>
                                     </thead>
-                                    <?php while ($data = mysqli_fetch_array($tampil)) { ?>
+                                    <?php 
+                                            while ($data = mysqli_fetch_array($tampil)) {
+
+                                        ?>
                                         <tbody>
                                             <tr>
-                                                <td><a href="detail-anggota.php?hal=edit&kd=<?php echo $data['id']; ?>"><span class="fa fa-user"><?php echo $data['id']; ?></span></td>
-                                                <td> <?php echo $data['nama']; ?></td>
-                                                <td><?php echo $data['username']; ?></td>
-                                                <td><?php echo $data['jk']; ?></td>
-                                                <td><?php echo $data['kelas']; ?></td>
-                                                <td><?php echo $data['ttl']; ?></td>
-                                                <td><?php echo $data['alamat']; ?></td>
+                                                <td><?php echo $data['id']; ?></td>
+                                                <td><?php echo $data['id_anggota']; ?></td>
+                                                <td><?php echo $data['id_buku_perpus']; ?></td>
+                                                <td><?php echo $data['tgl_pinjam']; ?></td>
+                                                <td><?php echo $data['tgl_pengembalian']; ?></td>
+                                                <td><?php echo $data['tgl_kembali']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    $batas = $data['tgl_pengembalian'];
+                                                    $kembali = $data['tgl_kembali'];
+                                                    $datenow = date("Y-m-d");
+
+                                                    if(empty($kembali)){
+                                                        $kembali = $datenow;
+                                                    }
+                                                    $status = $data['status'];
+                                                             
+                                                    if($status == '0'){
+                                                     $t = date_create($batas);
+                                                     $n = date_create($kembali);
+                                                     $terlambat = date_diff($t, $n);
+                                                     $hari = $terlambat->format("%a");
+
+
+                                                     if($batas >= $datenow){
+                                                        echo 'Sisa '.$hari.' Hari Lagi';
+                                                     }else{
+                                                        $denda = $hari * 500;
+                                                        echo 'Terlambat '.$hari .' Hari<br><button class=btn-danger>Denda '.format_rupiah($denda).'</button>';
+                                                     }
+
+                                                    }else{
+                                                        echo format_rupiah($data['denda']);
+                                                    }
+                                                    ?>
+                                                    
+
+                                                </td>
+                                                <td>
+                                                    <?php if($data['status'] == '0'){ 
+                                                        echo '<button class="btn btn-primary btn-sm">Dipinjam</button>'; 
+                                                    }else if($data['status'] == '1'){
+                                                        echo '<button class="btn btn-success btn-sm">Sudah Kembali</button>'; 
+                                                    }else{
+                                                        echo '<button class="btn btn-danger btn-sm">Denda</button>'; 
+                                                    }; ?>
+                                                </td>
                                                 <td>
                                                     <center>
-                                                        <div id="thanks"><a class="btn btn-sm btn-primary" data-placement="bottom" data-toggle="tooltip" title="Edit Anggota" href="edit-anggota.php?hal=edit&kd=<?php echo $data['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a>
-                                                            <a onclick="return confirm ('Yakin hapus <?php echo $data['nama']; ?>.?');" class="btn btn-sm btn-danger tooltips" data-placement="bottom" data-toggle="tooltip" title="Hapus Anggota" href="hapus-anggota.php?hal=hapus&kd=<?php echo $data['id']; ?>"><span class="glyphicon glyphicon-trash"></a>
+                                                        <div id="thanks"><a class="btn btn-sm btn-primary" data-placement="bottom" data-toggle="tooltip" title="Edit Buku" href="edit-peminjam.php?hal=edit&kd=<?php echo $data['id']; ?>"><span class="glyphicon glyphicon-edit"></span></a>
+                                                            <a onclick="return confirm ('Yakin hapus <?php echo $data['judul']; ?>.?');" class="btn btn-sm btn-danger tooltips" data-placement="bottom" data-toggle="tooltip" title="Hapus Buku" href="hapus-peminjam.php?hal=hapus&kd=<?php echo $data['id']; ?>"><span class="glyphicon glyphicon-trash"></a>
                                                     </center>
                                                 </td>
                                             </tr>
                             </div>
+
                         <?php
                                     }
                         ?>
                         </tbody>
                         </table>
 
-                        <?php $tampil = mysqli_query($conn, "select * from data_anggota order by id");
-                        $user = mysqli_num_rows($tampil);
+                        <?php $tampil = mysqli_query($conn, "select * from data_peminjam order by id");
+                        $buku = mysqli_num_rows($tampil);
                         ?>
                         <center>
-                            <h4>Jumlah Anggota : <?php echo "$user"; ?> Orang </h4>
+                            <h4>Jumlah Pinjaman : <?php echo "$buku"; ?> Pcs </h4>
                         </center>
 
                         <div class="text-right" style="margin-top: 10px;">
-                            <a href="anggota.php" class="btn btn-sm btn-info">Refresh Anggota <i class="fa fa-refresh"></i></a> <a href="input-anggota.php" class="btn btn-sm btn-warning">Tambah Anggota <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="peminjam.php" class="btn btn-sm btn-info">Refresh Pinjaman <i class="fa fa-refresh"></i></a> <a href="input-peminjam.php" class="btn btn-sm btn-warning">Tambah Peminjam <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                         </div><!-- /.box-body -->
                     </div><!-- /.box -->

@@ -21,7 +21,7 @@ if (!empty($_FILES["nama_file"]["tmp_name"])) {
 		$gambar = $namafolder . basename($_FILES['nama_file']['name']);
 		if (move_uploaded_file($_FILES['nama_file']['tmp_name'], $gambar)) {
 			$sql = "INSERT INTO data_anggota(id,no_induk,nama,username,password,jk,kelas,ttl,alamat,foto) VALUES
-            (NULL,'$no_induk','$nama','$username','$password','$jk','$kelas','$ttl','$alamat','$gambar')";
+            ('$id','$no_induk','$nama','$username','$password','$jk','$kelas','$ttl','$alamat','$gambar')";
 			$res = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 			echo "Gambar berhasil dikirim ke direktori" . $gambar;
 			echo "<h3><a href='input-anggota.php'> Input Lagi</a></h3>";
@@ -34,7 +34,7 @@ if (!empty($_FILES["nama_file"]["tmp_name"])) {
 	}
 } else {
 	$sql = "INSERT INTO data_anggota(id,no_induk,nama,username,password,jk,kelas,ttl,alamat,foto) VALUES
-            (NULL,'$no_induk','$nama','$username','$password','$jk','$kelas','$ttl','$alamat','gambar_anggota/avatar.jpg')";
+            ('$id','$no_induk','$nama','$username','$password','$jk','$kelas','$ttl','$alamat','gambar_anggota/avatar.jpg')";
 			$res = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 	header("location:input-anggota.php");
 }

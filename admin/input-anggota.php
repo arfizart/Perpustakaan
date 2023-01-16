@@ -64,14 +64,22 @@ if (empty($_SESSION['username'])) {
                             </header>
                             <!-- <div class="box-header"> -->
                             <!-- <h3 class="box-title">Responsive Hover Table</h3> -->
-
+                            <?php
+                                $q = mysqli_query($conn,"SELECT max(id) as kode FROM data_anggota");
+                                $last_id = mysqli_fetch_array($q);
+                                $last_id = $last_id['kode'];
+                                $urutan = (int) substr($last_id, 2, 3);
+                                $urutan++;
+                                $huruf = "AG";
+                                $kodeBarang = $huruf . sprintf("%03s", $urutan);
+                            ?>
                             <!-- </div> -->
                             <div class="panel-body">
                                 <form class="form-horizontal style-form" style="margin-top: 20px;" action="insert-anggota.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
                                     <div class="form-group">
                                         <label class="col-sm-2 col-sm-2 control-label">ID Anggota</label>
                                         <div class="col-sm-8">
-                                            <input name="id" type="text" id="id" class="form-control" placeholder="Tidak perlu di isi" autofocus="on" readonly="readonly" />
+                                            <input name="id" type="text" id="id" class="form-control" placeholder="Tidak perlu di isi" autofocus="on" readonly="readonly" value="<?php echo $kodeBarang; ?>" />
                                         </div>
                                     </div>
                                     <div class="form-group">

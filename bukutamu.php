@@ -75,9 +75,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label class="col-sm-2 col-sm-2 control-label">Usia</label>
+                                            <label class="col-sm-2 col-sm-2 control-label">Kelas</label>
                                             <div class="col-sm-6">
-                                                <input name="kelas" type="text" id="kelas" class="form-control" placeholder="Usia Anda" required />
+                                                <input name="kelas" type="text" id="kelas" class="form-control" placeholder="Kelas" required />
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -91,13 +91,6 @@
                                             <label class="col-sm-2 col-sm-2 control-label">Cari?</label>
                                             <div class="col-sm-10">
                                                 <input name="cari" type="text" id="cari" class="form-control" placeholder="Apa yang anda cari.?" required />
-                                                <!--<span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 col-sm-2 control-label">Saran</label>
-                                            <div class="col-sm-10">
-                                                <textarea rows="4" name="saran" id="saran" class="form-control" placeholder="Saran Anda untuk PerpustakaanKU" cols="25"></textarea>
                                                 <!--<span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span>-->
                                             </div>
                                         </div>

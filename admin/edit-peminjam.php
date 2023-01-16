@@ -17,6 +17,10 @@ if (empty($_SESSION['username'])) {
         <?php include 'header.php'; ?>
 
     <?php } ?>
+
+
+
+
     <div class="wrapper row-offcanvas row-offcanvas-left">
         <!-- Left side column. contains the logo and sidebar -->
         <aside class="left-side sidebar-offcanvas">
@@ -55,11 +59,16 @@ if (empty($_SESSION['username'])) {
             <!-- Main content -->
             <section class="content">
 
+
+
+            
+
+
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="panel">
                             <header class="panel-heading">
-                                <b>Input Buku Perpustakaan</b>
+                                <b>Peminjaman Buku Perpustakaan</b>
 
                             </header>
                             <!-- <div class="box-header"> -->
@@ -67,92 +76,120 @@ if (empty($_SESSION['username'])) {
 
                             <!-- </div> -->
         <?php
-            $q = mysqli_query($conn,"SELECT max(id) as kode FROM data_buku_perpus");
-            $last_id = mysqli_fetch_array($q);
-            $last_id = $last_id['kode'];
-            $urutan = (int) substr($last_id, 2, 4);
-            $urutan++;
-            $huruf = "BK";
-            $kdBuku = $huruf . sprintf("%04s", $urutan);
+        $query = mysqli_query($conn, "SELECT * FROM data_peminjam WHERE id='$_GET[kd]'");
+        $data  = mysqli_fetch_array($query);
         ?>
         <div class="panel-body">
-            <form class="form-horizontal style-form" style="margin-top: 20px;" action="insert-buku-perpus.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+            <form class="form-horizontal style-form" style="margin-top: 20px;" action="update-peminjam.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+                <div class="form-group">
+                    <label class="col-sm-2 col-sm-2 control-label">Kode Pinjam</label>
+                    <div class="col-sm-8">
+                        <input name="id" type="text" id="id" class="form-control" placeholder="Tidak perlu di isi" autofocus="on" readonly="readonly" value="<?=$data['id'];?>" />
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-sm-2 col-sm-2 control-label">Kode Buku</label>
                     <div class="col-sm-8">
-                        <input name="id" type="text" id="id" value="<?=$kdBuku;?>" class="form-control" placeholder="Tidak perlu di isi" autofocus="on" readonly="readonly" />
+                        <input name="kdBuku" type="text" id="kdBuku" class="form-control" autocomplete="off" placeholder="Kode Buku" required="" value="<?=$data['id_buku_perpus'];?>" readonly="readonly"  />
+                        <table class="table">
+                            <?php
+                            $idBook = $data['id_buku_perpus'];
+                            $queryBuku = mysqli_query($conn, "SELECT * FROM data_buku_perpus WHERE id='$idBook'");
+                            $dataBuku  = mysqli_fetch_array($queryBuku);
+                            ?>
+                            <th>Judul Buku</th><th>Pengarang</th><th>Tahun Terbit</th><th>Penerbit</th><th>Keterangan</th>
+                            <tr>
+                                <td><?=$dataBuku['judul'];?></td><td><?=$dataBuku['pengarang'];?></td><td><?=$dataBuku['tahun_terbit'];?></td><td><?=$dataBuku['penerbit'];?></td><td><?=$dataBuku['keterangan'];?></td>
+                            </tr>
+                        </table>
                     </div>
+
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Judul</label>
+                    <label class="col-sm-2 col-sm-2 control-label">Kode Anggota</label>
                     <div class="col-sm-8">
-                        <input name="judul" type="text" id="judul" class="form-control" autocomplete="off" placeholder="Judul Buku" required="" />
+                        <input name="kdAnggota" type="text" id="kdAnggota" class="form-control" autocomplete="off" placeholder="Kode Anggota" required="" value="<?=$data['id_anggota'];?>" readonly="readonly"  />
+                        <table class="table">
+                            <?php
+                            $idAnngota = $data['id_anggota'];
+                            $queryAnggota = mysqli_query($conn, "SELECT * FROM data_anggota WHERE id='$idAnngota'");
+                            $dataAnggota  = mysqli_fetch_array($queryAnggota);
+                            ?>
+                            <th>Foto</th><th>Nama</th><th>Email</th><th>Kelas</th><th>Alamat</th>
+                            <tr>
+                                <td><img src="<?=$dataAnggota['foto'];?>" height='100px'></td><td><?=$dataAnggota['nama'];?></td><td><?=$dataAnggota['no_induk'];?></td><td><?=$dataAnggota['kelas'];?></td><td><?=$dataAnggota['alamat'];?></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-2 col-sm-2 control-label">Tanggal Pinjam</label>
+                    <div class="col-sm-3">
+                        <input name="tgl_pinjam" type="date" id="tgl_pinjam" class="form-control" autocomplete="off" value="<?=$data['tgl_pinjam'];?>" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Pengarang</label>
-                    <div class="col-sm-8">
-                        <input name="pengarang" type="text" id="pengarang" class="form-control" autocomplete="off" placeholder="Pengarang" required="" />
+                    <label class="col-sm-2 col-sm-2 control-label">Batas Pengembalian</label>
+                    <div class="col-sm-3">
+
+                        <input name="tgl_pengembalian" type="date" id="tgl_pengembalian" class="form-control" autocomplete="off" value="<?=$data['tgl_pengembalian'];?>" readonly="readonly" />
+                    </div>
+                </div>
+                <?php
+                $batas = $data['tgl_pengembalian'];
+                $kembali = $data['tgl_kembali'];
+                $datenow = date("Y-m-d");
+
+                if(empty($kembali)){
+                    $kembali = $datenow;
+                }
+                $status = $data['status'];
+                         
+                if($status == '0'){
+                 $t = date_create($batas);
+                 $n = date_create($kembali);
+                 $terlambat = date_diff($t, $n);
+                 $hari = $terlambat->format("%a");
+
+
+                 if($batas >= $datenow){
+                    $denda = '0';
+                 }else{
+                    $denda = $hari * 500;
+                 }
+
+                }else{
+                    $denda = $data['denda'];
+                }
+                ?>
+                <div class="form-group">
+                    <label class="col-sm-2 col-sm-2 control-label">Denda</label>
+                    <div class="col-sm-3">
+                        <input name="denda" type="text" class="form-control" autocomplete="off" value="<?=format_rupiah($denda);?>" readonly="readonly" />
+                        <input type="hidden" name="denda" id="denda" value="<?=$denda;?>">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Tahun Terbit</label>
-                    <div class="col-sm-8">
-                        <input name="th_terbit" type="number" min="1900" max="<?=date('Y');?>" id="th_terbit" class="form-control" autocomplete="off" placeholder="Tahun Terbit" required="" value='1999' />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Penerbit</label>
-                    <div class="col-sm-8">
-                        <input name="penerbit" type="text" id="penerbit" class="form-control" autocomplete="off" placeholder="Penerbit" required="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">ISBN</label>
-                    <div class="col-sm-8">
-                        <input name="isbn" type="number" id="isbn" class="form-control" autocomplete="off" placeholder="ISBN" required="" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Keterangan</label>
-                    <div class="col-sm-8">
-                        <textarea name="keterangan" type="text" id="keterangan" class="form-control" placeholder="Keterangan"></textarea>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Kategori</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" name="kategori" id="kategori">
-                            <option value="Umum" selected> Umum</option>
-                            <option value="Kisah"> Kisah</option>
-                            <option value="Novel"> Novel</option>
-                            <option value="Puisi"> Puisi</option>
+                    <label class="col-sm-2 col-sm-2 control-label">Status Pengembalian</label>
+                    <div class="col-sm-3">
+                        <select class="form-control" name="status" id="status" required>
+                            <option value="1" <?php if ($data['status']=='1') {echo 'selected';} ?>> Sudah Dikembalikan</option>
+                            <option value="0" <?php if ($data['status']=='0') {echo 'selected';} ?>> Masih Dipinjam</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Jumlah Halaman</label>
-                    <div class="col-sm-8">
-                        <input name="jumlah_buku" type="number" id="jumlah_buku" class="form-control" autocomplete="off" placeholder="Jumlah Halaman" required value="1" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Tanggal Input</label>
-                    <div class="col-sm-8">
-                        <input name="tgl_input" type="text" id="tgl_input" class="form-control" autocomplete="off" value="<?php echo "" . date("Y/m/d") . ""; ?>" readonly="readonly" />
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Foto</label>
-                    <div class="col-sm-8">
-                        <input name="nama_file" id="nama_file" type="file" />
+                    <label class="col-sm-2 col-sm-2 control-label">Tanggal Kembali</label>
+                    <div class="col-sm-3">
+                        <input name="tgl_kembali" type="date" id="tgl_kembali" class="form-control" autocomplete="off" value="<?=$data['tgl_kembali'];?>" />
                     </div>
                 </div>
                 <div class="form-group" style="margin-bottom: 20px;">
                     <label class="col-sm-2 col-sm-2 control-label"></label>
                     <div class="col-sm-8">
-                        <input type="submit" value="Simpan" class="btn btn-sm btn-primary" />&nbsp;
-                        <a href="buku-perpus.php" class="btn btn-sm btn-danger">Batal </a>
+                        <input type="submit" value="Update" class="btn btn-sm btn-primary" />&nbsp;
+                        <a href="peminjam.php" class="btn btn-sm btn-danger"> Batal</a>
                     </div>
                 </div>
                 <div style="margin-top: 20px;"></div>
@@ -164,7 +201,7 @@ if (empty($_SESSION['username'])) {
                 <!-- row end -->
             </section><!-- /.content -->
             <div class="footer-main">
-                Copyright PerpustakaanKU 2021
+                Copyright © <?=date("Y");?>
             </div>
         </aside><!-- /.right-side -->
 
@@ -198,7 +235,16 @@ if (empty($_SESSION['username'])) {
 
     <!-- Director dashboard demo (This is only for demo purposes) -->
     <script src="../js/Director/dashboard.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        
+        function pickBook(id){
+            $('#kdBuku').val(id);
+        }
+        function pickAnggota(id){
+            $('#kdAnggota').val(id);
+        }
 
+    </script>
     <!-- Director for demo purposes -->
     <script type="text/javascript">
         $('input').on('ifChecked', function(event) {
@@ -225,42 +271,6 @@ if (empty($_SESSION['username'])) {
             checkboxClass: 'icheckbox_flat-grey',
             radioClass: 'iradio_flat-grey'
         });
-    </script>
-    <script type="text/javascript">
-        $(function() {
-            "use strict";
-            //BAR CHART
-            var data = {
-                labels: ["January", "February", "March", "April", "May", "June", "July"],
-                datasets: [{
-                        label: "My First dataset",
-                        fillColor: "rgba(220,220,220,0.2)",
-                        strokeColor: "rgba(220,220,220,1)",
-                        pointColor: "rgba(220,220,220,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(220,220,220,1)",
-                        data: [65, 59, 80, 81, 56, 55, 40]
-                    },
-                    {
-                        label: "My Second dataset",
-                        fillColor: "rgba(151,187,205,0.2)",
-                        strokeColor: "rgba(151,187,205,1)",
-                        pointColor: "rgba(151,187,205,1)",
-                        pointStrokeColor: "#fff",
-                        pointHighlightFill: "#fff",
-                        pointHighlightStroke: "rgba(151,187,205,1)",
-                        data: [28, 48, 40, 19, 86, 27, 90]
-                    }
-                ]
-            };
-            new Chart(document.getElementById("linechart").getContext("2d")).Line(data, {
-                responsive: true,
-                maintainAspectRatio: false,
-            });
-
-        });
-        // Chart.defaults.global.responsive = true;
     </script>
     </body>
 

@@ -55,114 +55,102 @@ if (empty($_SESSION['username'])) {
             <!-- Main content -->
             <section class="content">
 
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="panel">
-                            <header class="panel-heading">
-                                <b>Input Buku Perpustakaan</b>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="panel">
+            <header class="panel-heading">
+                <b>Input Buku</b>
 
-                            </header>
-                            <!-- <div class="box-header"> -->
-                            <!-- <h3 class="box-title">Responsive Hover Table</h3> -->
-
-                            <!-- </div> -->
-        <?php
-            $q = mysqli_query($conn,"SELECT max(id) as kode FROM data_buku_perpus");
-            $last_id = mysqli_fetch_array($q);
-            $last_id = $last_id['kode'];
-            $urutan = (int) substr($last_id, 2, 4);
-            $urutan++;
-            $huruf = "BK";
-            $kdBuku = $huruf . sprintf("%04s", $urutan);
-        ?>
-        <div class="panel-body">
-            <form class="form-horizontal style-form" style="margin-top: 20px;" action="insert-buku-perpus.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Kode Buku</label>
-                    <div class="col-sm-8">
-                        <input name="id" type="text" id="id" value="<?=$kdBuku;?>" class="form-control" placeholder="Tidak perlu di isi" autofocus="on" readonly="readonly" />
+            </header>
+            <!-- <div class="box-header"> -->
+            <!-- <h3 class="box-title">Responsive Hover Table</h3> -->
+            <?php
+            $query = mysqli_query($conn, "SELECT * FROM data_buku_perpus WHERE id='$_GET[kd]'");
+            $data  = mysqli_fetch_array($query);
+            ?>
+            <!-- </div> -->
+            <div class="panel-body">
+                <form class="form-horizontal style-form" style="margin-top: 20px;" action="update-buku-perpus.php" method="post" enctype="multipart/form-data" name="form1" id="form1">
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Kode Buku</label>
+                        <div class="col-sm-8">
+                            <input name="id" type="text" id="id" class="form-control" value="<?php echo $data['id']; ?>" autofocus="on" readonly="readonly" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Judul</label>
-                    <div class="col-sm-8">
-                        <input name="judul" type="text" id="judul" class="form-control" autocomplete="off" placeholder="Judul Buku" required="" />
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Judul</label>
+                        <div class="col-sm-8">
+                            <input name="judul" type="text" id="judul" class="form-control" autocomplete="off" value="<?php echo $data['judul']; ?>" required="" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Pengarang</label>
-                    <div class="col-sm-8">
-                        <input name="pengarang" type="text" id="pengarang" class="form-control" autocomplete="off" placeholder="Pengarang" required="" />
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Pengarang</label>
+                        <div class="col-sm-8">
+                            <input name="pengarang" type="text" id="pengarang" class="form-control" autocomplete="off" value="<?php echo $data['pengarang']; ?>" required="" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Tahun Terbit</label>
-                    <div class="col-sm-8">
-                        <input name="th_terbit" type="number" min="1900" max="<?=date('Y');?>" id="th_terbit" class="form-control" autocomplete="off" placeholder="Tahun Terbit" required="" value='1999' />
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Tahun Terbit</label>
+                        <div class="col-sm-8">
+                            <input name="th_terbit" type="text" id="th_terbit" class="form-control" autocomplete="off" value="<?php echo $data['tahun_terbit']; ?>" required="" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Penerbit</label>
-                    <div class="col-sm-8">
-                        <input name="penerbit" type="text" id="penerbit" class="form-control" autocomplete="off" placeholder="Penerbit" required="" />
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Penerbit</label>
+                        <div class="col-sm-8">
+                            <input name="penerbit" type="text" id="penerbit" class="form-control" autocomplete="off" value="<?php echo $data['penerbit']; ?>" required="" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">ISBN</label>
-                    <div class="col-sm-8">
-                        <input name="isbn" type="number" id="isbn" class="form-control" autocomplete="off" placeholder="ISBN" required="" />
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">ISBN</label>
+                        <div class="col-sm-8">
+                            <input name="isbn" type="text" id="isbn" class="form-control" autocomplete="off" value="<?php echo $data['isbn']; ?>" required="" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Keterangan</label>
-                    <div class="col-sm-8">
-                        <textarea name="keterangan" type="text" id="keterangan" class="form-control" placeholder="Keterangan"></textarea>
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Kategori</label>
+                        <div class="col-sm-8">
+                            <input name="kategori" type="text" id="Kategori" class="form-control" autocomplete="off" value="<?php echo $data['kategori']; ?>" required="" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Kategori</label>
-                    <div class="col-sm-4">
-                        <select class="form-control" name="kategori" id="kategori">
-                            <option value="Umum" selected> Umum</option>
-                            <option value="Kisah"> Kisah</option>
-                            <option value="Novel"> Novel</option>
-                            <option value="Puisi"> Puisi</option>
-                        </select>
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Jumlah Halaman</label>
+                        <div class="col-sm-8">
+                            <input name="jumlah_buku" type="text" id="jumlah_buku" class="form-control" autocomplete="off" value="<?php echo $data['jumlah_buku']; ?>" required />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Jumlah Halaman</label>
-                    <div class="col-sm-8">
-                        <input name="jumlah_buku" type="number" id="jumlah_buku" class="form-control" autocomplete="off" placeholder="Jumlah Halaman" required value="1" />
+                    
+                    <div class="form-group">
+                        <label class="col-sm-2 col-sm-2 control-label">Tanggal Masuk</label>
+                        <div class="col-sm-8">
+                            <input name="tgl_input" type="text" id="tgl_input" class="form-control" autocomplete="off" value="<?php echo $data['tanggal_masuk']; ?>" readonly="readonly" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Tanggal Input</label>
-                    <div class="col-sm-8">
-                        <input name="tgl_input" type="text" id="tgl_input" class="form-control" autocomplete="off" value="<?php echo "" . date("Y/m/d") . ""; ?>" readonly="readonly" />
+                    
+                    <div class="form-group">
+                        <input type="hidden" name="foto_old" value="<?=$data['sampul'];?>">
+                        <label class="col-sm-2 col-sm-2 control-label">Foto</label>
+                        <div class="col-sm-8">
+                            <span class="help-block">Silahkan memilih foto untuk update atau mengedit data, tekan tombol batal untuk kembali.</span>
+                            <img src="<?php if($data['sampul']==''){ echo 'gambar_admin/avatar.jpg';}else{ echo $data['sampul']; }; ?>" height="250" width="250" alt="" style="margin-bottom: 10px;" /><br />
+                            <input name="nama_file" id="nama_file" type="file" />
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-2 col-sm-2 control-label">Foto</label>
-                    <div class="col-sm-8">
-                        <input name="nama_file" id="nama_file" type="file" />
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="col-sm-2 col-sm-2 control-label"></label>
+                        <div class="col-sm-8">
+                            <input type="submit" value="Simpan" class="btn btn-sm btn-primary" />&nbsp;
+                            <a href="buku-perpus.php" class="btn btn-sm btn-danger"> Batal</a>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label class="col-sm-2 col-sm-2 control-label"></label>
-                    <div class="col-sm-8">
-                        <input type="submit" value="Simpan" class="btn btn-sm btn-primary" />&nbsp;
-                        <a href="buku-perpus.php" class="btn btn-sm btn-danger">Batal </a>
-                    </div>
-                </div>
-                <div style="margin-top: 20px;"></div>
-            </form>
-        </div>
-    </div><!-- /.box -->
-                    </div>
-                </div>
-                <!-- row end -->
-            </section><!-- /.content -->
+                    <div style="margin-top: 20px;"></div>
+                </form>
+            </div>
+        </div><!-- /.box -->
+    </div>
+</div>
+<!-- row end -->
+</section><!-- /.content -->
             <div class="footer-main">
                 Copyright PerpustakaanKU 2021
             </div>

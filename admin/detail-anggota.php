@@ -94,7 +94,7 @@ if (empty($_SESSION['username'])) {
                                     </tr>
                                     <tr>
                                         <td>Password</td>
-                                        <td><?php echo $data['password']; ?></td>
+                                        <td>*****</td>
                                     </tr>
                                     <tr>
                                         <td>Jenis Kelamin</td>
