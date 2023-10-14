@@ -24,7 +24,7 @@ if (empty($_SESSION['username'])) {
     while ($pbook_data = mysqli_fetch_array($pbookdata)) {
         // $filebook = $pbook_data['link_buku'].'#toolbar=0&navpanes=0';
 
-        $filebook = $pbook_data['link_buku'];
+        $filebook = 'upload/pdf/'.$pbook_data['link_buku'];
         $namebook = $pbook_data['judul'];
     }
 

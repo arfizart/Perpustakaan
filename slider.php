@@ -20,7 +20,7 @@ $slider = mysqli_query($conn, $sldier_query) or die(mysqli_error($conn));
 					<a href="baca.php?id=<?=$slider_data['id']?>" target="_blank" class="btn-outline-accent btn-accent-arrow">Baca<i class="icon icon-ns-arrow-right"></i></a>
 				</div>
 			</div><!--banner-content--> 
-			<img src="<?=$slider_data['gambar']?>" alt="banner" class="banner-image">
+			<img src="upload/pdf/<?=$slider_data['gambar']?>" alt="banner" class="banner-image">
 		</div><!--slider-item-->
 
 		<?php } ?>

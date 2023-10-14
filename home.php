@@ -40,7 +40,7 @@
 			
 					<?php while ($pbook_data = mysqli_fetch_array($pbookdata)) { ?>
 					<figure class="product-style"><a href="baca.php?id=<?=$pbook_data['id']?>" target="_blank">
-						<img src="<?=$pbook_data['gambar']?>" width="100%" alt="<?=$pbook_data['judul']?>" class="product-item">
+						<img src="upload/pdf/<?=$pbook_data['gambar']?>" width="100%" alt="<?=$pbook_data['judul']?>" class="product-item">
 						
 							<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Baca</button>
 						
@@ -101,7 +101,7 @@
 					<?php while ($dataBuku = mysqli_fetch_array($listBuku)) { ?>
 				  	<figure class="product-style">
 				  		<a href="baca.php?id=<?=$dataBuku['id']?>" target="_blank">
-						<img src="<?=$dataBuku['gambar']?>" alt="Books" class="product-item">
+						<img src="upload/pdf/<?=$dataBuku['gambar']?>" alt="Books" class="product-item">
 						<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Baca</button>
 						<figcaption>
 							<h3><?=$dataBuku['judul']?></h3>
